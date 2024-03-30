@@ -291,37 +291,42 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void callPhone (String phoneNum) {
+    public void callPhone (int position) {
         if (拨打卡号 == 0) {
-            callPhoneDetail(phoneNum, 0);
+            callPhoneDetail(position, 0);
             preSim = 0;
             return;
         }
 
         if (拨打卡号 == 1) {
-            callPhoneDetail(phoneNum, 1);
+            callPhoneDetail(position, 1);
             preSim = 1;
             return;
         }
 
         if (拨打卡号 == 2) {
             if (preSim == 1){
-                callPhoneDetail(phoneNum, 0);
+                callPhoneDetail(position, 0);
+                preSim = 0;
             }else {
-                callPhoneDetail(phoneNum, 1);
+                callPhoneDetail(position, 1);
+                preSim = 1;
             }
             return;
         }
     }
     /**
      * 拨打电话（拨号权限自行处理）
-     * @param phoneNum ：目标手机号
 
      * @param simIndex ：sim卡的位置 0代表sim卡1，1代表sim卡2
 
      */
 
-    public void callPhoneDetail(String phoneNum, int simIndex) {
+    public void callPhoneDetail(int position, int simIndex) {
+
+        PhoneBean phoneBean = phoneList.get(position);
+        phoneList.get(position).isCalled = true;
+        String phoneNum = phoneBean.Phone;
 
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -395,9 +400,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         ToastUtils.showShort("开始拨打未拨打的电话号码");
-        for (PhoneBean phoneBean: phoneList) {
-            if (!phoneBean.isCalled) {
-                callPhone(phoneBean.Phone);
+        for (int i = 0 ; i < phoneList.size(); i ++) {
+            if (!phoneList.get(i).isCalled) {
+                callPhone(i);
                 break;
             }
         }
