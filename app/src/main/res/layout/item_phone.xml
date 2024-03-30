@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/lib_ui_bg_f5f8fa_radius_22"
+    android:layout_marginHorizontal="15dp"
+    android:layout_height="52dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:paddingHorizontal="8dp"
+    android:layout_marginTop="6dp"
+    >
 
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        />
 
     <TextView
         android:id="@+id/phoneTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameTextView"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        />
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:padding="2dp"
+        android:src="@drawable/lib_ui_ic_general_right_arrow1"
+        />
+
+</RelativeLayout>

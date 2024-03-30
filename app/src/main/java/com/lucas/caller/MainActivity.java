@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             Sheet sheet = workbook.getSheet(0);
 
             // 读取每一行，将第一列和第二列的值存储到列表中
-            for (int i = 0; i < sheet.getRows(); i++) {
+            for (int i = 1; i < sheet.getRows(); i++) {
                 Cell[] rowCells = sheet.getRow(i);
                 if (rowCells.length >= 2) {
                     PhoneBean phoneBean = new PhoneBean(rowCells[0].getContents(), rowCells[1].getContents());
