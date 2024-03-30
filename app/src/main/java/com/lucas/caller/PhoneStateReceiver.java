@@ -4,7 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.blankj.utilcode.util.ThreadUtils;
+import com.blankj.utilcode.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class PhoneStateReceiver extends BroadcastReceiver {
 
@@ -17,7 +23,11 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             int state = telephonyManager.getCallState();
             if (state == TelephonyManager.CALL_STATE_IDLE) {
                 // 电话挂断
-                Toast.makeText(context, "电话已挂断,开始准备拨打下一个", Toast.LENGTH_SHORT).show();
+                Log.e("xujinjin", "onReceive: " );
+
+                ToastUtils.showShort("电话已挂断,开始准备拨打下一个");
+                EventBus.getDefault().post(new MessageEvent());
+
             }
         }
     }

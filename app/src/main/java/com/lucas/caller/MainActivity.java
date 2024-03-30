@@ -7,15 +7,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,6 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.UriUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,10 +56,17 @@ public class MainActivity extends AppCompatActivity {
     private int 拨打卡号 = 0; // 0为sim1   1为sim2
     private int preSim = 0;
 
+    Button uncalledButton;
+    Button calledButton;
+
+    public int Position = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        EventBus.getDefault().register(this);
 
         button_dual_sim_settings = findViewById(R.id.button_dual_sim_settings);
         button_start_auto_dial = findViewById(R.id.button_start_auto_dial);
@@ -89,33 +97,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button_start_auto_dial.setOnClickListener(v -> {
-
-            if (phoneList.size()<1) {
-                ToastUtils.showShort("还未导入xls文件");
-                return;
-            }
-
-            boolean allCalled = true;
-            if (phoneList.size()>1) {
-                for (PhoneBean phoneBean: phoneList) {
-                    if (!phoneBean.isCalled) {
-                        allCalled = false;
-                    }
-                }
-                if (allCalled) {
-                    ToastUtils.showShort("列表已经全部拨打过电话！");
-                    return;
-                }
-
-            }
-
-
-            ToastUtils.showShort("开始拨打未拨打的电话号码");
-            for (PhoneBean phoneBean: phoneList) {
-                if (!phoneBean.isCalled) {
-                    callPhone(phoneBean.Phone);
-                }
-            }
+            gotoCallPhone();
 
         });
 
@@ -154,18 +136,20 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        Button uncalledButton = findViewById(R.id.uncalledButton);
+        uncalledButton = findViewById(R.id.uncalledButton);
         uncalledButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Position = 0 ;
                 updateList(false);
             }
         });
 
-        Button calledButton = findViewById(R.id.calledButton);
+        calledButton = findViewById(R.id.calledButton);
         calledButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Position = 1 ;
                 updateList(true);
             }
         });
@@ -182,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter = new PhoneAdapter(filteredList);
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -264,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             rawList.clear();
 
+            calledButton.setAlpha(0.5f);
 
         } catch (IOException | BiffException e) {
             e.printStackTrace();
@@ -368,4 +354,52 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        // 处理事件
+        button_dual_sim_settings.postDelayed(() -> {
+            gotoCallPhone();
+        }, 1000 * 间隔时间);
+
+        button_dual_sim_settings.postDelayed(() -> {
+            if (Position == 0) {
+                updateList(false);
+            }
+            if (Position == 1) {
+                updateList(true);
+            }
+        }, 250);
+    }
+
+
+    public void gotoCallPhone() {
+        if (phoneList.size()<1) {
+            ToastUtils.showShort("还未导入xls文件");
+            return;
+        }
+
+        boolean allCalled = true;
+        if (phoneList.size()>1) {
+            for (PhoneBean phoneBean: phoneList) {
+                if (!phoneBean.isCalled) {
+                    allCalled = false;
+                }
+            }
+            if (allCalled) {
+                ToastUtils.showShort("列表已经全部拨打过电话！");
+                return;
+            }
+
+        }
+
+
+        ToastUtils.showShort("开始拨打未拨打的电话号码");
+        for (PhoneBean phoneBean: phoneList) {
+            if (!phoneBean.isCalled) {
+                callPhone(phoneBean.Phone);
+                break;
+            }
+        }
+    }
 }

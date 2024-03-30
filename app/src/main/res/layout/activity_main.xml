@@ -49,13 +49,12 @@
         >
 
         <Button
-            android:id="@+id/calledButton"
+            android:id="@+id/uncalledButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:textSize="12dp"
-            android:text="已拨打电话"
-           />
+            android:text="未拨打的电话" />
 
         <View
             android:layout_width="0dp"
@@ -63,12 +62,14 @@
             android:layout_height="1dp"/>
 
         <Button
-            android:id="@+id/uncalledButton"
+            android:id="@+id/calledButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:textSize="12dp"
-            android:text="未拨打的电话" />
+            android:text="已拨打电话"
+            />
+
     </LinearLayout>
 
 

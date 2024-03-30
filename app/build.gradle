@@ -40,5 +40,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.blankj:utilcode:1.30.7'
 
+    implementation("org.greenrobot:eventbus:3.3.1")
+
 
 }
