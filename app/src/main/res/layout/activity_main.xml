@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="10dp"
-            android:text="双卡设置"
+            android:text="双卡设置（默认卡1）"
             android:paddingHorizontal="0dp"/>
     </LinearLayout>
 

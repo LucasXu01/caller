@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.UriUtils;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CALL_PERMISSION = 10111;
 
 
+    private Button button_dual_sim_settings;
     private Button button_interval_duration;
     private Button button_start_auto_dial;
     private Button button;
@@ -50,12 +52,15 @@ public class MainActivity extends AppCompatActivity {
     private PhoneAdapter adapter;
     private List<PhoneBean> phoneList = new ArrayList<>();
     private int 间隔时间 = 3;
+    private int 拨打卡号 = 0; // 0为sim1   1为sim2
+    private int preSim = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        button_dual_sim_settings = findViewById(R.id.button_dual_sim_settings);
         button_start_auto_dial = findViewById(R.id.button_start_auto_dial);
         button_interval_duration = findViewById(R.id.button_interval_duration);
         // 点击按钮触发文件选择操作
@@ -84,8 +89,56 @@ public class MainActivity extends AppCompatActivity {
         });
 
         button_start_auto_dial.setOnClickListener(v -> {
-//            CallManager.callPhone(this, "17136867768", 1);
-            callPhone("17136867768", 1);
+
+            if (phoneList.size()<1) {
+                ToastUtils.showShort("还未导入xls文件");
+                return;
+            }
+
+            boolean allCalled = true;
+            if (phoneList.size()>1) {
+                for (PhoneBean phoneBean: phoneList) {
+                    if (!phoneBean.isCalled) {
+                        allCalled = false;
+                    }
+                }
+                if (allCalled) {
+                    ToastUtils.showShort("列表已经全部拨打过电话！");
+                    return;
+                }
+
+            }
+
+
+            ToastUtils.showShort("开始拨打未拨打的电话号码");
+            for (PhoneBean phoneBean: phoneList) {
+                if (!phoneBean.isCalled) {
+                    callPhone(phoneBean.Phone);
+                }
+            }
+
+        });
+
+//        设置拨打的sim卡
+        button_dual_sim_settings.setOnClickListener(V->{
+            if ( 拨打卡号 == 0) {
+                拨打卡号 = 1;
+                button_dual_sim_settings.setText("双卡设置（卡2）");
+                return;
+            }
+
+            if ( 拨打卡号 == 1) {
+                拨打卡号 = 2;
+                button_dual_sim_settings.setText("双卡设置（卡12轮播）");
+                return;
+            }
+
+            if ( 拨打卡号 == 2) {
+                拨打卡号 = 0;
+                button_dual_sim_settings.setText("双卡设置（卡1）");
+                return;
+            }
+
         });
 
 
@@ -251,6 +304,29 @@ public class MainActivity extends AppCompatActivity {
             "slotIdx"};
 
 
+
+    public void callPhone (String phoneNum) {
+        if (拨打卡号 == 0) {
+            callPhoneDetail(phoneNum, 0);
+            preSim = 0;
+            return;
+        }
+
+        if (拨打卡号 == 1) {
+            callPhoneDetail(phoneNum, 1);
+            preSim = 1;
+            return;
+        }
+
+        if (拨打卡号 == 2) {
+            if (preSim == 1){
+                callPhoneDetail(phoneNum, 0);
+            }else {
+                callPhoneDetail(phoneNum, 1);
+            }
+            return;
+        }
+    }
     /**
      * 拨打电话（拨号权限自行处理）
      * @param phoneNum ：目标手机号
@@ -259,15 +335,15 @@ public class MainActivity extends AppCompatActivity {
 
      */
 
-    public void callPhone(String phoneNum, int simIndex) {
+    public void callPhoneDetail(String phoneNum, int simIndex) {
 
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:17136867768"));
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("com.android.phone.force.slot", true);
         intent.putExtra("Cdma_Supp", true);
         //Add all slots here, according to device.. (different device require different key so put all together)
         for (String s : simSlotName)
-            intent.putExtra(s, 1); //0 or 1 according to sim.......
+            intent.putExtra(s, simIndex); //0 or 1 according to sim.......
         //works only for API >= 21
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
@@ -283,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
-                intent.putExtra("android.telecom.extra.PHONE_ACCOUNT_HANDLE", phoneAccountHandleList.get(1));
+                intent.putExtra("android.telecom.extra.PHONE_ACCOUNT_HANDLE", phoneAccountHandleList.get(simIndex));
             } catch (Exception e) {
                 e.printStackTrace();
                 //writeLog("No Sim card? at slot " + simNumber+"\n\n"+e.getMessage(), this);
