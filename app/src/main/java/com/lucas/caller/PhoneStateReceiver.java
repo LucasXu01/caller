@@ -16,6 +16,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        ToastUtils.showShort("电话开始准备下一个");
         // 获取电话管理器
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         if (telephonyManager != null) {
@@ -24,8 +25,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             if (state == TelephonyManager.CALL_STATE_IDLE) {
                 // 电话挂断
                 Log.e("xujinjin", "onReceive: " );
-
-                ToastUtils.showShort("电话已挂断,开始准备拨打下一个");
                 EventBus.getDefault().post(new MessageEvent());
 
             }

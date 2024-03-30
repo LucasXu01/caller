@@ -399,10 +399,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        ToastUtils.showShort("开始拨打未拨打的电话号码");
         for (int i = 0 ; i < phoneList.size(); i ++) {
             if (!phoneList.get(i).isCalled) {
-                callPhone(i);
+                ToastUtils.showShort("开始拨打未拨打的电话号码");
+                int finalI = i;
+                button_dual_sim_settings.postDelayed(()->{
+                    callPhone(finalI);
+                }, 1000);
+
                 break;
             }
         }
