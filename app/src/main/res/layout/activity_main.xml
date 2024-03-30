@@ -6,12 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+
+    <RelativeLayout
+        android:id="@+id/re"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        >
+
+        <Button
+            android:id="@+id/button_select_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="导入新excel文件(必须为.xls文件)"
+            android:textSize="12dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="15dp"
+            android:textAllCaps="false"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/img"
+            />
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:src="@mipmap/tips"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginHorizontal="15dp"
+        android:layout_below="@+id/re"
         >
 
         <Button
@@ -19,6 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
+            android:textSize="12dp"
             android:text="已拨打电话"
            />
 
@@ -32,10 +67,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
+            android:textSize="12dp"
             android:text="未拨打的电话" />
     </LinearLayout>
-
-
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -43,15 +77,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/linear"
+        android:layout_above="@+id/linear2"
         />
 
-    <Button
-        android:id="@+id/button_select_file"
-        android:layout_width="200dp"
+
+
+    <LinearLayout
+        android:id="@+id/linear2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="导入excel文件"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        />
+        android:layout_marginHorizontal="15dp"
+        >
+
+        <Button
+            android:id="@+id/button_interval_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="间隔时长（默认3s）"
+            android:textSize="10dp"
+            android:paddingHorizontal="0dp"
+            android:textAllCaps="false"
+            />
+
+        <Button
+            android:id="@+id/button_start_auto_dial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="10dp"
+            android:layout_marginHorizontal="4dp"
+            android:text="开始自动拨号"
+            android:paddingHorizontal="0dp"/>
+
+        <Button
+            android:id="@+id/button_dual_sim_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="10dp"
+            android:text="双卡设置"
+            android:paddingHorizontal="0dp"/>
+    </LinearLayout>
+
+
 
 
 </RelativeLayout>
