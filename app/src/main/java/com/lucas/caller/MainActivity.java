@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Position = 0 ;
                 updateList(false);
+                calledButton.setAlpha(0.5f);
+                uncalledButton.setAlpha(1f);
             }
         });
 
@@ -151,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Position = 1 ;
                 updateList(true);
+                calledButton.setAlpha(1f);
+                uncalledButton.setAlpha(0.5f);
             }
         });
     }
