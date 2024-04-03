@@ -1,6 +1,7 @@
 package com.lucas.caller;
 
 import android.Manifest;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -189,10 +191,38 @@ public class MainActivity extends AppCompatActivity {
 
         // 导入剪切板
         button_add_from_clipboard.setOnClickListener(v->{
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
+                CharSequence clipboardText = clipboardManager.getPrimaryClip().getItemAt(0).getText();
+                if (!TextUtils.isEmpty(clipboardText)) {
+                    List<PhoneBean> clipboardList = parseClipboardText(clipboardText.toString());
+
+                    //添加到列表中
+                    if (clipboardList != null && clipboardList.size() >0){
+                        phoneList.addAll(0, clipboardList);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
 
         });
     }
 
+
+    private List<PhoneBean> parseClipboardText(String clipboardText) {
+        List<PhoneBean> phoneList = new ArrayList<>();
+        String[] lines = clipboardText.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(" ");
+            if (parts.length == 2) {
+                String name = parts[0];
+                String phone = parts[1];
+                PhoneBean phoneBean = new PhoneBean(name, phone);
+                phoneList.add(phoneBean);
+            }
+        }
+        return phoneList;
+    }
 
     // 根据isCalled字段更新列表显示
     private void updateList(boolean isCalled) {
