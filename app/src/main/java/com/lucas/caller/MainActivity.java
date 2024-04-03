@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button_start_auto_dial;
     private Button button;
     private ImageView img;
+    private ImageView img2;
     private RecyclerView recyclerView;
     private PhoneAdapter adapter;
     private List<PhoneBean> phoneList = new ArrayList<>();
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button uncalledButton;
     Button calledButton;
+    Button button_add_from_clipboard;
 
     public int Position = 0;
 
@@ -68,12 +70,18 @@ public class MainActivity extends AppCompatActivity {
 
         EventBus.getDefault().register(this);
 
+        button_add_from_clipboard = findViewById(R.id.button_add_from_clipboard);
         button_dual_sim_settings = findViewById(R.id.button_dual_sim_settings);
         button_start_auto_dial = findViewById(R.id.button_start_auto_dial);
         button_interval_duration = findViewById(R.id.button_interval_duration);
         // 点击按钮触发文件选择操作
         button = findViewById(R.id.button_select_file);
         button.setOnClickListener(view -> pickExcelFile());
+        img2 = findViewById(R.id.img2);
+        img2.setOnClickListener(view -> {
+            CustomDialog2 dialog = new CustomDialog2(this);
+            dialog.show();
+        });
         img = findViewById(R.id.img);
         img.setOnClickListener(view -> {
             CustomDialog dialog = new CustomDialog(this);
@@ -175,6 +183,13 @@ public class MainActivity extends AppCompatActivity {
                 calledButton.setAlpha(1f);
                 uncalledButton.setAlpha(0.5f);
             }
+        });
+
+
+
+        // 导入剪切板
+        button_add_from_clipboard.setOnClickListener(v->{
+
         });
     }
 
