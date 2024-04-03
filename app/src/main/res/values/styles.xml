@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- 自定义主题，去除标题栏 -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>
