@@ -29,6 +29,7 @@
         />
 
     <ImageView
+        android:id="@+id/img"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
@@ -36,6 +37,17 @@
         android:layout_marginRight="10dp"
         android:padding="2dp"
         android:src="@drawable/lib_ui_ic_general_right_arrow1"
+        />
+
+    <TextView
+        android:id="@+id/xiugai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_toLeftOf="@+id/img"
+        android:layout_marginRight="8dp"
+        android:text="修改"
+        android:layout_centerVertical="true"
         />
 
 </RelativeLayout>

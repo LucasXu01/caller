@@ -136,6 +136,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
+        adapter.setOnPhoneItemClickListener(new PhoneAdapter.OnPhoneItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                ModifyPhoneInputDialog dialog = new ModifyPhoneInputDialog(MainActivity.this, phoneList.get(position).Phone);
+                dialog.setOnIntervalSetListener(new ModifyPhoneInputDialog.OnModifySetListener() {
+                    @Override
+                    public void onModify(String newPhone) {
+                        phoneList.get(position).Phone = newPhone;
+                        adapter.notifyItemChanged(position);
+                    }
+                });
+                dialog.show();
+
+
+            }
+        });
+
+
         uncalledButton = findViewById(R.id.uncalledButton);
         uncalledButton.setOnClickListener(new View.OnClickListener() {
             @Override
